@@ -45,7 +45,7 @@ router.route('/')
             console.log('err: ' + err);
             res.render('error', {err: '댓글 작성 실패'});
           } else if(result) {
-            console.log(docs);
+            console.log('댓글 작성 성공');
             res.send({result: docs[0].comments});
           }
         }
@@ -62,16 +62,31 @@ router.route('/')
     var flag = req.body.flag;
 
     if(post_id) {
-      model.addlike(post_id, flag, 
-        function(err, result) {
-          if(err) {
-            console.log('err: ' + err);
-            res.render('error', {err: '좋아요 추가 실패'});
-          } else {
-            res.send({result: result});
+      if(flag == 1) {
+        model.addlike(post_id, req.cookies.id, 
+          function(err, result, docs) {
+            if(err) {
+              console.log('err: ' + err);
+              res.render('error', {err: '좋아요 추가 실패'});
+            } else if(result) {
+              console.log(docs);
+              res.send({result: docs[0].like});
+            }
           }
-        }
-      );
+        );
+      } else {
+        model.sublike(post_id, req.cookies.id, 
+          function(err, result, docs) {
+            if(err) {
+              console.log('err: ' + err);
+              res.render('error', {err: '좋아요 삭제 실패'});
+            } else if(result) {
+              console.log(docs);
+              res.send({result: docs[0].like});
+            }
+          }
+        )
+      }
     }
   }
 });

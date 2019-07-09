@@ -5,8 +5,8 @@ var model = require('../model/DAO');
 
 router.route('/')
 .get(function(req, res, next) {
-  res.render('users')
-})
+  res.render('users');
+});
 
 router.route('/register')
 .get(function(req, res, next) {
@@ -67,6 +67,6 @@ router.route('/logout')
 .get(function(req, res, next) {
   res.clearCookie('id');
   res.redirect('/');
-})
+});
 
 module.exports = router;

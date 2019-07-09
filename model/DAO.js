@@ -93,7 +93,7 @@ exports.addpost = function(content, id, callback) {
     var like = 0;
 
     user.toArray(function(err, docs) {
-        post.insertMany([{"name": docs[0].name, "id": id, "content": content, "date": date, 'like': like}], 
+        post.insertMany([{"name": docs[0].name, "id": id, "content": content, "date": date, 'like': like, 'like_user': []}], 
             function(err, result) {
                 if (err) {
                     console.log('게시물 추가 안됨');
@@ -135,7 +135,7 @@ exports.addcomment = function(content, id, post_id, callback) {
     });
 };
 
-exports.addlike = function(post_id, flag, callback) {
+exports.addlike = function(post_id, id, callback) {
     console.log('addlike 호출됨');
 
     post_id = new ObjectId(post_id);
@@ -144,19 +144,75 @@ exports.addlike = function(post_id, flag, callback) {
     var posts = db.collection("post");
     var post = posts.find({'_id': post_id});
 
-    if(flag == 0)   flag = -1;
-
     post.toArray(function(err, docs) {
-        posts.updateOne({"_id": post_id}, {$set: {'like': parseInt((docs[0].like + parseInt(flag)))}},
+        posts.updateOne({"_id": post_id}, {$set: {'like': docs[0].like + 1}},
             function(err, result) {
                 if(err) {
-                    console.log('좋아요 수정 실패');
+                    console.log('좋아요 증가 실패');
                     callback(err, null);
                 } else {
-                    console.log('좋아요 수정 성공');
-                    callback(null, result);
+                    console.log('좋아요 증가 성공');
+                    posts.updateOne({"_id": post_id}, {$push: {'like_user': id}},
+                        function(err, result) {
+                            if(err) {
+                                console.log('좋아요 유저 추가 실패');
+                            } else {
+                                console.log('좋아요 유저 추가 성공');
+                            }
+                        }
+                    );
+                    post.toArray(function(err, docs) {
+                        callback(null, result, docs);
+                    });
                 }
             }
         );
-    })
+    });
+};
+
+exports.sublike = function(post_id, id, callback) {
+    console.log('sublike 호출됨');
+
+    post_id = new ObjectId(post_id);
+    console.log('post_id: ' + post_id);
+
+    var posts = db.collection("post");
+    var post = posts.find({'_id': post_id});
+
+    post.toArray(function(err, docs) {
+        posts.updateOne({"_id": post_id}, {$set: {'like': docs[0].like - 1}},
+            function(err, result) {
+                if(err) {
+                    console.log('좋아요 감소 실패');
+                    callback(err, null);
+                } else {
+                    console.log('좋아요 감소 성공');
+                    posts.deleteOne({'like_user': id},
+                        function(err, result) {
+                            if(err) {
+                                console.log('좋아요 유저 삭제 실패');
+                            } else {
+                                console.log('좋아요 유저 삭제 성공');
+                            }
+                        }
+                    );
+                    post.toArray(function(err, docs) {
+                        console.log(docs);
+                        callback(null, result, docs);
+                    });
+                }
+            }
+        );
+    });
+};
+
+exports.showprofile = function(id, callback) {
+    console.log('showprofile 호출됨');
+
+    var users = db.collection('users');
+    var user = users.find({ 'id': id });
+
+    user.toArray(function (err, docs) {
+        res.render('profile', { user: docs[0] });
+    });
 };

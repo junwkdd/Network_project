@@ -96,7 +96,7 @@
                             </button>
                             <button type="button" class="btn btn-dark btn-sm" onclick="comment_func_<%=post[i]._id%>()">
                                 <i class="fa fa-comment mr-2"></i>댓글 
-                                <span id="comment_count">
+                                <span id="comment_count_<%=post[i]._id%>">
                                     <% if(post[i].comments !== undefined) { %>
                                         (<%=post[i].comments.length%>)
                                     <% } %>
@@ -114,19 +114,17 @@
                                     dataType:'json',
                                     data: {post_id: post_id, flag: flag},
                                     success: function(data) {
-                                        if (data) {
-                                            $('#like_count_<%=post[i]._id%>').html('(' + parseInt(<%=post[i].like%> + flag) + ')');
-                                            if(flag == 1) {
-                                                $('#heart_<%=post[i]._id%>').css('color', 'red');
-                                                flag = 0;
-                                            } else {
-                                                $('#heart_<%=post[i]._id%>').css('color', 'white');
-                                                flag += 1;
-                                            }
+                                        console.log(data.result);
+                                        $('#like_count_<%=post[i]._id%>').html('(' + data.result + ')');
+                                        if(flag == 1) {
+                                            $('#heart_<%=post[i]._id%>').css('color', 'red');
+                                            flag = 0;
+                                        } else {
+                                            $('#heart_<%=post[i]._id%>').css('color', 'white');
+                                            flag = 1;
                                         }
-                                    },  
+                                    },
                                     error: function(request, status, error) {
-                                        alert("code:"+request.status+"\n"+"error:"+error);
                                     }
                                 });
                             });
@@ -153,7 +151,7 @@
                                 <input type="text" class="form-control form-control-sm" placeholder="로그인을 하고 댓글을 작성해보세요." name="comment" id="comment_<%post[i]._id%>">
                             <% } %>
                                 <div class="input-group-append">
-                                    <button class="btn btn-dark btn-sm rounded-right" type="submit" id="enter_comment_<%post[i]._id%>">작성</button> 
+                                    <button class="btn btn-dark btn-sm rounded-right" type="submit" id="enter_comment_<%=post[i]._id%>">작성</button> 
                                 </div>
                             </div>
                             <% if(post[i].comments !== undefined) { %>
@@ -169,7 +167,7 @@
                             <% } %>
                             <%# 비동기 댓글 추가 %>
                             <script>
-                                $('#enter_comment_<%post[i]._id%>').click(function() {
+                                $('#enter_comment_<%=post[i]._id%>').click(function() {
                                     var post_id = '<%=post[i]._id%>';
                                     var comment = $('#comment_<%post[i]._id%>').val();
                                     $('#comment_<%post[i]._id%>').val('');
@@ -178,22 +176,19 @@
                                         type: 'post',
                                         data: {post_id: post_id, comment: comment},
                                         success: function(res) {
-                                            alert('성공');
-                                            console.log(res);
                                             var data = res['result'];
-                                            alert(data.length);
                                             if(data !== undefined) {
                                                 for(var j = 0; j < data.length; j++) {
-                                                    $('#comment-body').append(
-                                                        <div class="media pl-4 pt-3" id="comment-body">
-                                                            <a href=""><img src="../images/porfile.png" alt="" class="mr-3 rounded-circle" style="width:40px;"></a>
-                                                            <div class="media-body" id="comment-body">
-                                                                <a href=""><h6><span id="post_name_<%post[i]._id%>"><%=post[i].comments[j].name%></span></a> <small><i id="post_date_<%post[i]._id%>"> <%=post[i].comments[j].date%></i></small></h6>
-                                                                <p id="post_content_<%post[i]._id%>" class="bg-white rounded-lg p-2"><%=post[i].comments[j].content%></p>
-                                                            </div>
-                                                        </div>
-                                                    );
+                                                    var html = '<div class="media pl-4 pt-3">';
+                                                        html += '<a href=""><img src="../images/porfile.png" alt="" class="mr-3 rounded-circle" style="width:40px;"></a>';
+                                                        html += '<div class="media-body" id="comment-body">';
+                                                        html += '<a href=""><h6><span id="post_name_<%post[i]._id%>">' + data[j].name + '</span></a> <small><i id="post_date_<%post[i]._id%>">' + data[j].date + '</i></small></h6>';
+                                                        html += '<p id="post_content_<%post[i]._id%>" class="bg-white rounded-lg p-2">' + data[j].content + '</p>';
+                                                        html += '</div>'
+                                                        html += '</div>' 
                                                 }
+                                                $('#comment_count_<%=post[i]._id%>').html('(' + data.length + ')');
+                                                $('#comment_board_<%=post[i]._id%>').append(html);
                                             }
                                         },  
                                         error: function(request, status, error) {
