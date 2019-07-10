@@ -211,8 +211,22 @@ exports.showprofile = function(id, callback) {
 
     var users = db.collection('users');
     var user = users.find({ 'id': id });
+    var posts = db.collection('post');
+    var post = posts.find({ 'id': id });
 
-    user.toArray(function (err, docs) {
-        res.render('profile', { user: docs[0] });
+    user.toArray(function (err, user_docs) {
+        if(err) {
+            console.log('err:' + err);
+            callback(err, null);
+        } else {
+            post.toArray(function(err, post_docs) {
+                if(err) {
+                    console.log('개인 게시물 찾기 실패');
+                } else {
+                    console.log('프로필 탐색 완료');
+                    callback(null, user_docs, post_docs);
+                }
+            })
+        }
     });
 };

@@ -5,45 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Profile</title>
-    <link rel="stylesheet" href="profile.css">
-    <style>
-        .margin2{
-            margin: 2rem;
-        }
-        #margin22{
-            margin-left: 11%;
-        }
-        .pic{
-            padding-top: 3%;
-        }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../stylesheets/profile.css">
 </head>
 <body>
     <div class="pic">
-            <center><a><img src="http://blogfiles.naver.net/20151122_199/totlab_1448196836619lDz9x_PNG/%BB%E7%B6%F7.png" alt="Profile" width="15%"></a></center>
-            <center><a href="#" class="button">CHANGE PROFILE</a></center>
+            <center><a><img src="http://blogfiles.naver.net/20151122_199/totlab_1448196836619lDz9x_PNG/%BB%E7%B6%F7.png" alt="Profile" width="10%"></a></center>
+            <center><a href="#" class="button display-1">CHANGE PROFILE</a></center>
     </div>
     
-    <div id="pricing-table" class="clear" style="width: 1200px">
-        <div class="plan margin2" id="margin22">
-            <h3>TIMELINE</h3> 
-            <form>
-            <center>
-            게시물을 남겨주세요. <br/><br/>
-            <textarea name="table1" rows="3" cols="40" ></textarea></center>
-            <a class="signup" href="">POST</a>        
-        </form>
-        </div>
-        <div class="plan margin2">
+    <div id="pricing-table" class="clear mt-5 col-12">
+        <div class="plan col-2 ml-5">
             <h3>INFORMATION</h3>       
             <ul>
-                <li><b>생일</b> 1월 1일</li>
-                <li><b>광주</b> 거주</li>
-                <li><b>세종</b> 출생</li>
-                <li><b>광주소프트웨어마이스터고</b> 재학</li>
-                <li><b>instagram</b><a href="https://www.instagram.com/song._.512/?hl=ko"> song._.512</a></li>		
-                <li></li>
-            </ul>    
+                <li>학번<input type="text" class="form-control form-control-sm"></li>
+                <li>학과<input type="text" class="form-control form-control-sm"></li>
+                <li>이메일<input type="text" class="form-control form-control-sm"></li>
+            </ul>
         </div>
+
+        <div class="plan col-9 ml-5">
+            <h3>TIMELINE</h3> 
+            <form>
+                     
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>

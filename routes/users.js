@@ -5,7 +5,20 @@ var model = require('../model/DAO');
 
 router.route('/')
 .get(function(req, res, next) {
-  res.render('users');
+  var id = req.query.id;
+
+  model.showprofile(id, 
+    function(err, result_user, result_post) {
+      if(err) {
+        res.render('error', {err: err});
+      }
+      if(result_user && result_post) {
+        res.render('profile', {user: result_user[0], post: result_post});
+      } else {
+        res.render('error', {err: '프로필 불러오기 실패'});
+      }
+    }
+  );
 });
 
 router.route('/register')
