@@ -4,50 +4,22 @@ body {
     font: 400 0.875rem/1.5 "Open Sans", sans-serif;
     margin: 0;
     min-height: 100%;
-  }
-
-
-a.button {
-    font-size: 12px;
-    font-weight: 600;
-    color: white;
-    padding: 8px 29px 5px 23px;
-    margin: 5px 8px 20px 15px;
-    display: inline-block;
-    text-decoration: none;
-    width: 165px; height: 28px; 
-    -webkit-border-radius: 5px; 
-    -moz-border-radius: 5px; 
-    border-radius: 5px; 
-    background-color: #ea4c88;
-    font-family: 'Open Sans';
-    top: 0px;
-    position: relative;
-  }
-
-a.button:hover {
-    background-color: #d44179;
-  }
-
-form {
-  padding: 8px 29px 5px 45px;
 }
 /* --------------- */
 
-/* 큰 테이블 */
-#pricing-table {
-  text-align: center;
-}
-
 #pricing-table2 {
   margin: 50px auto 50px auto;
-  text-align: center;
+
   width: 892px; /* total computed width = 222 x 3 + 226 */
+}
+
+button:hover {
+  color: white!important;
 }
 
 /* 테이블 안 */
 #pricing-table .plan {
-  font: 12px 'Lucida Sans', 'trebuchet MS', Arial, Helvetica;    
+  font: 1em 'Lucida Sans', 'trebuchet MS', Arial, Helvetica;    
   background: #fff;      
   border: 1px solid #ddd;
   padding: 20px;
@@ -65,11 +37,7 @@ form {
 }
 
 /* 모서리 둥글 */
-.margin2 {
-  -moz-border-radius: 5px 5px 5px 5px;
-  -webkit-border-radius: 5px 5px 5px 5px;
-  border-radius: 5px 5px 5px 5px;        
-}
+
 
 /* 위에 쓰는 글씨  */
 #pricing-table h3{
@@ -89,13 +57,12 @@ form {
 
 
 #pricing-table ul{
-  margin: 20px 0 0 0;
   padding: 0;
   list-style: none;
 }
 
 #pricing-table li{
-  padding: 10px 0;
+  padding: 10px 0 0 0;
 }
 
 /* --------------- */
@@ -133,12 +100,38 @@ form {
 .clear	{
   zoom:1
 }	
-.margin2{
-  margin: 2rem;
-}
-#margin22{
-  margin-left: 11%;
-}
 .pic{
   padding-top: 3%;
+}
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+* :focus {
+    box-shadow: none!important;
+}
+
+a {
+    text-decoration: none!important;
+    color: #212529;
+}
+a:hover {
+    text-decoration: none!important;
+    color: #212529!important;
 }

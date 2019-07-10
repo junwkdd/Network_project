@@ -13,7 +13,7 @@ router.route('/')
         console.log('err: ' + err);
         res.render('error', {err: '게시물 보유주기 실패'});
       } else {
-        res.render('index', {'post' : result, 'name': name});
+        res.render('index', {'post' : result, 'name': name, 'id': req.cookies.id});
       }
     }
   );

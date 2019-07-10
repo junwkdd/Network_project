@@ -22,7 +22,7 @@
 
         <div class="form__field">
           <label class="fontawesome-info-sign" for="login__password" style="width: 50px;"><span class="hidden">Password</span></label>
-          <input id="login__id" type="text" name="id" class="form__input" placeholder="아이디" required>
+          <input id="login__id" type="text" name="id" class="form__input" placeholder="아이디" oninput="IDSame();" required>
         </div>
 
         <div class="form__field">
@@ -36,6 +36,7 @@
         </div>
 
         <p id="error" class="text--center"></p>
+        <p id="error1" class="text--center"></p>
 
         <div class="form__field">
           <input type="submit" id="button" value="회원가입">
@@ -44,19 +45,51 @@
       </form>
 
       <script>
-          function PWSame() {
-              if(login__password.value == login__repassword.value) {
-                  document.getElementById('error').innerHTML="비밀번호가 일치합니다."
-                  document.getElementById('error').style.color="#00BFFF";
-                  document.getElementById('button').disabled = false;
-                  document.getElementById('button').style.background="#d44179";
-              } else {
-                  document.getElementById('error').innerHTML="비밀번호가 일치하지 않습니다."
-                  document.getElementById('error').style.color="#FF0000";
-                  document.getElementById('button').disabled = true;
-                  document.getElementById('button').style.background="#BDBDBD";
-              }
+        var id_ok;
+        var pw_ok;
+        function PWSame() {
+          if(login__password.value == login__repassword.value) {
+              document.getElementById('error1').innerHTML="비밀번호가 일치합니다."
+              document.getElementById('error1').style.color="#00BFFF";
+              pw_ok = true;
+          } else {
+              document.getElementById('error1').innerHTML="비밀번호가 일치하지 않습니다."
+              document.getElementById('error1').style.color="#FF0000";
+              pw_ok = false;
           }
+          if(id_ok && pw_ok) {
+              document.getElementById('button').disabled = false;
+              document.getElementById('button').style.background="#d44179";
+          } else {
+              document.getElementById('button').disabled = true;
+              document.getElementById('button').style.background="#BDBDBD";
+          }
+        }
+
+        function IDSame() {
+          var id = document.getElementById('login__id').value;
+          <%for(var i = 0; i < (users.length); i++) { %>
+                if('<%=users[i].id%>' == id) {
+                  var idcheck = false;
+                } else {
+                    document.getElementById('error').innerHTML="사용가능한 아이디입니다.";
+                    document.getElementById('error').style.color="#00BFFF";
+                    id_ok = true;
+                }
+                if(idcheck == false) {
+                    document.getElementById('error').innerHTML="이미 사용중인 아이디입니다."
+                    document.getElementById('error').style.color="#FF0000";
+                    id_ok = false;
+                }
+                if(id_ok && pw_ok) {
+                    document.getElementById('button').disabled = false;
+                    document.getElementById('button').style.background="#d44179";
+                } else {
+                    document.getElementById('button').disabled = true;
+                    document.getElementById('button').style.background="#BDBDBD";
+                }
+          <% } %> 
+        }
       </script>
 
       <p class="text--center">이미 회원이신가요? <a href="/users/login">로그인</a> <span class="fontawesome-arrow-right"></span></p>

@@ -76,9 +76,12 @@ exports.authUser = function (id, password, callback) {
         if (err) {
             console.log('err:' + err);
             callback(err, null);
-        } else {
+        } else if(docs.length > 0) {
             console.log('유저를 찾음');
             callback(null, docs);
+        } else {
+            console.log('유저 정보 없음');
+            callback(null, null);
         }
     });
 };
@@ -187,7 +190,7 @@ exports.sublike = function(post_id, id, callback) {
                     callback(err, null);
                 } else {
                     console.log('좋아요 감소 성공');
-                    posts.deleteOne({'like_user': id},
+                    posts.updateOne({"_id": post_id}, { $pull: { like_user: id }},
                         function(err, result) {
                             if(err) {
                                 console.log('좋아요 유저 삭제 실패');
@@ -209,10 +212,13 @@ exports.sublike = function(post_id, id, callback) {
 exports.showprofile = function(id, callback) {
     console.log('showprofile 호출됨');
 
+    var mysort = { _id: -1 };
+
     var users = db.collection('users');
     var user = users.find({ 'id': id });
     var posts = db.collection('post');
-    var post = posts.find({ 'id': id });
+    var post = posts.find({ 'id': id }).sort(mysort);
+;
 
     user.toArray(function (err, user_docs) {
         if(err) {
@@ -229,4 +235,49 @@ exports.showprofile = function(id, callback) {
             })
         }
     });
+};
+
+exports.addinfo = function(id, student_id, profession, email, callback) {
+    var users = db.collection('users');
+    var user = users.find({'id': id});
+
+    users.update({ "id": id }, {$set: {'email': email, 'student_id': student_id, 'profession': profession}}, 
+    function (err, result) {
+        if (err) {
+            console.log('정보 추가 실패');
+            callback(err, null);
+        } else {
+            console.log('정보 추가됨');
+            user.toArray(function(err, docs) {
+                if(err) {
+                    console.log('err:' + err);
+                } else {
+                    console.log('정보 갱신 성공');                    
+                    callback(null, result, docs);
+                }
+            })
+        }
+    });
+};
+
+exports.showusers = function(callback) {
+    var users = db.collection("users");
+    var user = users.find({});
+
+    user.toArray(function(err, docs) {
+        if(err) {
+            console.log('err:' + err);
+            callback(err, null);
+        } else {
+            console.log('유저 불러오기 성공');
+            callback(null, docs);
+        }
+    });
+};
+
+exports.show_like_users = function(post_id, callback) {
+    var posts = db.collection('post');
+    var post = posts.find({"_id": post_id});
+
+    
 };

@@ -15,34 +15,29 @@
 
 </head>
 <body style="background-color: #F2F2F2">
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <!-- Brand -->
-        <a class="navbar-brand" href="#">Logo</a>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
 
-        <!-- Links -->
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/users/login">Log in</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/users/logout">Log out</a>
-            </li>
-
-            <!-- Dropdown -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                    Dropdown link
-                </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Link 1</a>
-                    <a class="dropdown-item" href="#">Link 2</a>
-                    <a class="dropdown-item" href="#">Link 3</a>
-                </div>
-            </li>
-        </ul>
+        <a class="navbar-brand" href="/">교내 SNS</a>
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <% if(id == undefined) { %>
+                        <a class="nav-link" href="/users/login">Log in</a>
+                    <% } else { %>
+                        <a class="nav-link" href="/users/logout">Log out</a>
+                    <% } %>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/users?id=<%=id%>">
+                        <i class="fas fa-user-circle fa-lg mr-2"></i>
+                        <%=name%>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </nav>
     
-    <div class="row mt-3">
+    <div class="row" style="margin-top: 4rem!important">
         <div class="col-sm-2">
             lorem
         </div>
@@ -61,7 +56,7 @@
                         </div>
                         <div class="card-footer py-2 px-3" style="overflow: hidden">
                             <span class="btn btn-dark btn-file btn-sm"><i class="fas fa-image mr-2"></i>이미지 선택<input type="file" name="" id="" class=""></span>
-                            <input type="submit" value="작성" class="btn btn-dark btn-sm float-right">
+                            <button class="btn btn-dark btn-sm rounded float-right" type="submit" id="enter_post">작성</button> 
                         </div>
                     </form>
                 </div>
@@ -72,7 +67,7 @@
                     <div class="card col-sm-12 px-0">
                         <div class="card-body px-0">
                             <div class="media px-2">
-                                <a href=""><img src="../images/porfile.png" class="mr-3" alt="..." style="width:64px;"></a>
+                                <a href="/users?id=<%=post[i].id%>"><img src="../images/porfile.png" class="mr-3" alt="..." style="width:64px;"></a>
                                 <div class="media-body">
                                     <h5 class="mt-0"><a href=""><%=post[i].name%></a></h5>
                                     <%=post[i].date%>
@@ -87,6 +82,7 @@
                         </div>
                         <div class="card-body pb-3">
                             <button type="button" class="btn btn-dark btn-sm mr-2" id="like__<%=post[i]._id%>">
+                                <% if() %>
                                 <i class="far fa-heart mr-2" id="heart_<%=post[i]._id%>"></i>좋아요  
                                 <span id="like_count_<%=post[i]._id%>">
                                     <% if(post[i].like !== undefined) { %>
@@ -146,9 +142,9 @@
                         <div class="card-footer" id="comment_board_<%=post[i]._id%>" style="display: none;">
                             <div class="input-group mb-2">
                             <% if(name !== undefined) { %>
-                                <input type="text" class="form-control form-control-sm" placeholder="<%=name%>님 댓글을 입력하세요." name="comment" id="comment_<%post[i]._id%>">
+                                <input type="text" class="form-control form-control-sm" placeholder="<%=name%>님 댓글을 입력하세요." name="comment" id="comment_<%=post[i]._id%>">
                             <% } else { %>
-                                <input type="text" class="form-control form-control-sm" placeholder="로그인을 하고 댓글을 작성해보세요." name="comment" id="comment_<%post[i]._id%>">
+                                <input type="text" class="form-control form-control-sm" placeholder="로그인을 하고 댓글을 작성해보세요." name="comment" id="comment_<%=post[i]._id%>">
                             <% } %>
                                 <div class="input-group-append">
                                     <button class="btn btn-dark btn-sm rounded-right" type="submit" id="enter_comment_<%=post[i]._id%>">작성</button> 
@@ -159,8 +155,8 @@
                                     <div class="media pl-4 pt-3">
                                         <a href=""><img src="../images/porfile.png" alt="" class="mr-3 rounded-circle" style="width:40px;"></a>
                                         <div class="media-body" id="comment-body">
-                                            <a href=""><h6><span id="post_name_<%post[i]._id%>"><%=post[i].comments[j].name%></span></a> <small><i id="post_date_<%post[i]._id%>"> <%=post[i].comments[j].date%></i></small></h6>
-                                            <p id="post_content_<%post[i]._id%>" class="bg-white rounded-lg p-2"><%=post[i].comments[j].content%></p>
+                                            <a href=""><h6><span id="post_name_<%=post[i]._id%>"><%=post[i].comments[j].name%></span></a> <small><i id="post_date_<%=post[i]._id%>"> <%=post[i].comments[j].date%></i></small></h6>
+                                            <p id="post_content_<%=post[i]._id%>" class="bg-white rounded-lg p-2"><%=post[i].comments[j].content%></p>
                                         </div>
                                     </div>
                                 <% } %>
@@ -169,8 +165,8 @@
                             <script>
                                 $('#enter_comment_<%=post[i]._id%>').click(function() {
                                     var post_id = '<%=post[i]._id%>';
-                                    var comment = $('#comment_<%post[i]._id%>').val();
-                                    $('#comment_<%post[i]._id%>').val('');
+                                    var comment = $('#comment_<%=post[i]._id%>').val();
+                                    $('#comment_<%=post[i]._id%>').val('');
                                     $.ajax({
                                         url: '/',
                                         type: 'post',
@@ -182,8 +178,8 @@
                                                     var html = '<div class="media pl-4 pt-3">';
                                                         html += '<a href=""><img src="../images/porfile.png" alt="" class="mr-3 rounded-circle" style="width:40px;"></a>';
                                                         html += '<div class="media-body" id="comment-body">';
-                                                        html += '<a href=""><h6><span id="post_name_<%post[i]._id%>">' + data[j].name + '</span></a> <small><i id="post_date_<%post[i]._id%>">' + data[j].date + '</i></small></h6>';
-                                                        html += '<p id="post_content_<%post[i]._id%>" class="bg-white rounded-lg p-2">' + data[j].content + '</p>';
+                                                        html += '<a href=""><h6><span id="post_name_<%=post[i]._id%>">' + data[j].name + '</span></a> <small><i id="post_date_<%=post[i]._id%>">' + data[j].date + '</i></small></h6>';
+                                                        html += '<p id="post_content_<%=post[i]._id%>" class="bg-white rounded-lg p-2">' + data[j].content + '</p>';
                                                         html += '</div>'
                                                         html += '</div>' 
                                                 }

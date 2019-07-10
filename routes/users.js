@@ -5,25 +5,60 @@ var model = require('../model/DAO');
 
 router.route('/')
 .get(function(req, res, next) {
+  console.log('프로필 get 호출됨');
   var id = req.query.id;
 
-  model.showprofile(id, 
+  model.showprofile(id,
     function(err, result_user, result_post) {
       if(err) {
         res.render('error', {err: err});
       }
       if(result_user && result_post) {
-        res.render('profile', {user: result_user[0], post: result_post});
+        res.render('profile', {user: result_user[0], post: result_post, id: req.cookies.id});
       } else {
         res.render('error', {err: '프로필 불러오기 실패'});
       }
     }
   );
+})
+.post(function(req, res, next) {
+  console.log('프로필 post 호출됨');
+
+  var student_id = req.body.student_id;
+  var profession = req.body.profession;
+  var email = req.body.email;
+  var id = req.cookies.id;
+
+  if(student_id && profession && email) {
+    model.addinfo(id, student_id, profession, email, 
+      function(err, result) {
+        if(err) {
+          res.render('error', {err: err});
+        }
+        if(result) {
+          console.log('result' + result);
+        } else {
+          res.render('error', {err: '회원가입 실패'});
+        }
+      }
+    )
+  }
 });
 
 router.route('/register')
 .get(function(req, res, next) {
-  res.render('register');
+  model.showusers(
+    function(err, result) {
+      if(err) {
+        res.render('error', {'err': err});
+      }
+      if(result) {        
+        res.render('register', {users: result});
+      } else {
+        res.render('register');
+      }
+    }
+  );
 })
 .post(function(req, res, next) {
   console.log('register post 방식으로 호출됨');
@@ -69,7 +104,7 @@ router.route('/login')
           res.cookie('id' , id);
           res.redirect('../');
         } else {
-          res.render('error', {err: '로그인 실패'});
+          res.redirect('register');
         }
       }
     );
