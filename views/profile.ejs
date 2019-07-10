@@ -13,34 +13,37 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </head>
     <body>
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <!-- Brand -->
-            <a class="navbar-brand" href="#">Logo</a>
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
 
-            <!-- Links -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/users/login">Log in</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/users/logout">Log out</a>
-                </li>
-
-                <!-- Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                        Dropdown link
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Link 1</a>
-                        <a class="dropdown-item" href="#">Link 2</a>
-                        <a class="dropdown-item" href="#">Link 3</a>
-                    </div>
-                </li>
-            </ul>
+            <a class="navbar-brand" href="/">교내 SNS</a>
+            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul class="navbar-nav ml-auto">
+                    <% if(id == undefined) { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/users/login">Log in</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/users/login">
+                                <i class="fas fa-user-circle fa-lg mr-2"></i>
+                                <%=user.name%>
+                            </a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/users/logout">Log out</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/users?id=<%=id%>">
+                                <i class="fas fa-user-circle fa-lg mr-2"></i>
+                                <%=user.name%>
+                            </a>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
         </nav>
 
-        <div class="row">
+        <div class="row" style="margin-top: 4rem!important">
             <div class="d-inline col-2">
                 <div class="col-12 ml-5">
                     <a><img src="http://blogfiles.naver.net/20151122_199/totlab_1448196836619lDz9x_PNG/%BB%E7%B6%F7.png" alt="Profile" width="90%" class="rounded-circle"></a><br>
@@ -53,22 +56,23 @@
                                 <% if(user.student_id == undefined && id == user.id) { %>
                                     <li class="text-center">학번<input type="text" class="form-control form-control-sm" id="student_id" autocomplete="off" placeholder="정보 입력"></li>
                                 <% } else { %>
-                                    <li class="text-center">학번<br> <div class="border-top border-bottom pb-1 pt-1" style="border-color: #BDBDBD!important"><%= user.student_id %></div></li>
+                                    <li class="text-center">학번<br> <div id="sutdent_id" class="border-top border-bottom pb-1 pt-1" style="border-color: #BDBDBD!important"><%= user.student_id %></div></li>
                                 <% } %>
 
                                 <% if(user.profession == undefined && id == user.id) { %>
                                     <li class="text-center">학과<input type="text" class="form-control form-control-sm" id="profession" autocomplete="off" placeholder="정보 입력"></li>
                                 <% } else { %>
-                                    <li class="text-center">학과<br> <div class="border-top border-bottom pb-1 pt-1" style="border-color: #BDBDBD!important"><%= user.profession %></div></li>
+                                    <li class="text-center">학과<br> <div id="profession" class="border-top border-bottom pb-1 pt-1" style="border-color: #BDBDBD!important"><%= user.profession %></div></li>
                                 <% } %>
 
                                 <% if(user.profession == undefined && id == user.id) { %>
                                     <li class="text-center">이메일<input type="email" class="form-control form-control-sm" id="email" autocomplete="off" placeholder="정보 입력"></li>
                                 <% } else { %>
-                                    <li class="text-center">이메일<br> <div class="border-top border-bottom pb-1 pt-1" style="border-color: #BDBDBD!important"><%= user.email %></div></li>
+                                    <li class="text-center">이메일<br> <div id="email" class="border-top border-bottom pb-1 pt-1" style="border-color: #BDBDBD!important"><%= user.email %></div></li>
                                 <% } %>
                                 <li><button id="edit_profile" class="btn btn-sm mt-3 mb-0 ml-4" style="font-size:12px; background-color:#ea4c88;">프로필 수정</button></li>
                             </ul>
+                            <%# 프로필 정보 추가 %>
                             <script>
                                 $('#edit_profile').click(function() {
                                     var student_id = $('#student_id').val();
@@ -78,11 +82,12 @@
                                         url: '/users',
                                         type: 'post',
                                         data: {student_id: student_id, profession: profession, email: email},
-                                        success: function(res) {
-                                            var data = res['result'];
-                                            console.log(data);
+                                        success: function(data) {
+                                            user = data.user[0];
                                             if(data !== undefined) {
-                                                
+                                                $('#sutdent_id').html(student_id);
+                                                $('#profession').html(profession);
+                                                $('#email').html(email);
                                             }
                                         },  
                                         error: function(request, status, error) {
@@ -98,29 +103,18 @@
             <div id="pricing-table" class="clear col-10">
                 <div class="plan ml-5 mt-5 rounded col-11 pb-0" style="">
                     <h3>TIMELINE</h3>
-                                    <div class="card col-sm-12 px-0">
-                    <form action="" method="POST">
-                        <div class="card-header py-2 px-3">게시물 작성</div>
-                        <div class="card-body p-0">
-                            <textarea class="form-control border-0 pl-3 px-3" name="content" placeholder="<%=user.name%>님 내용을 작성하세요." rows="3" id="comment" autocomplete="off" style="resize:none; overflow: hidden;" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
-                        </div>
-                        <div class="card-footer py-2 px-3" style="overflow: hidden">
-                            <span class="btn btn-dark btn-file btn-sm"><i class="fas fa-image mr-2"></i>이미지 선택<input type="file" name="" id="" class=""></span>
-                            <input type="submit" value="작성" class="btn btn-dark btn-sm float-right">
-                        </div>
-                    </form>
-                </div>
                     <% if(post.length == 0) { %>
                         <div class="text-center my-5"><h1><%=user.name%>님 게시글을 남겨보세요!</h1></div>
+                        <h5 class="text-center"><a href="../" class="hover">게시글 작성하로 가기</a></h5>
                     <% } %>
                     <% for(var i = 0; i < post.length; i++) { %>
                         <div class="row mt-3 mb-3">
                             <div class="card col-sm-12 px-0">
                                 <div class="card-body px-0">
                                     <div class="media px-2">
-                                        <a href=""><img src="../images/porfile.png" class="mr-3" alt="..." style="width:64px;"></a>
+                                        <a href="/users?id=<%=post[i].id%>"><img src="../images/porfile.png" class="mr-3" alt="..." style="width:64px;"></a>
                                         <div class="media-body">
-                                            <h5 class="mt-0"><a href=""><%=post[i].name%></a></h5>
+                                            <h5 class="mt-0"><a href="/users?id=<%=post[i].id%>" class="hover"><%=post[i].name%></a></h5>
                                             <%=post[i].date%>
                                             <hr style="border: 1px solid #343a40; background-color: #343a40">
                                             <div class="media mt-3">
@@ -140,6 +134,29 @@
                                             <% } %>
                                         </span>
                                     </button>
+                                    <%# 좋아요 중복 확인 %>
+                                    <script>
+                                        var post_id = '<%=post[i]._id%>';
+                                        $.ajax({
+                                            url: '/',
+                                            type: 'delete',
+                                            dataType:'json',
+                                            data: {post_id: post_id},
+                                            success: function(data) {
+                                                data = data.like_users[0];
+                                                for(var i = 0; i < data.like_user.length; i++) {
+                                                    if('<%=id%>' == data.like_user[i]) {
+                                                        $('#heart_<%=post[i]._id%>').css('color', 'red');
+                                                        break;
+                                                    } else {
+                                                        $('#heart_<%=post[i]._id%>').css('color', 'white');
+                                                    }
+                                                }
+                                            },
+                                            error: function(request, status, error) {
+                                            }
+                                        }); 
+                                    </script>
                                     <button type="button" class="btn btn-dark btn-sm" onclick="comment_func_<%=post[i]._id%>()">
                                         <i class="fa fa-comment mr-2"></i>댓글 
                                         <span id="comment_count_<%=post[i]._id%>">
@@ -150,9 +167,14 @@
                                     </button>
                                 </div>  
                                 <%# 비동기 좋아요 추가 %>
-                                <script>
-                                    var flag = 1;                            
+                                <script>  
+                                    var flag
                                     $('#like__<%=post[i]._id%>').click(function() {
+                                        if($('#heart_<%=post[i]._id%>').css('color') == 'rgb(255, 255, 255)') {                                                     
+                                            flag = 1;
+                                        } else {
+                                            flag = 0
+                                        }
                                         var post_id = '<%=post[i]._id%>';
                                         $.ajax({
                                             url: '/',
@@ -160,15 +182,15 @@
                                             dataType:'json',
                                             data: {post_id: post_id, flag: flag},
                                             success: function(data) {
-                                                console.log(data.result);
                                                 $('#like_count_<%=post[i]._id%>').html('(' + data.result + ')');
-                                                if(flag == 1) {
+                                                if($('#heart_<%=post[i]._id%>').css('color') == 'rgb(255, 255, 255)') {
                                                     $('#heart_<%=post[i]._id%>').css('color', 'red');
                                                     flag = 0;
                                                 } else {
                                                     $('#heart_<%=post[i]._id%>').css('color', 'white');
                                                     flag = 1;
                                                 }
+
                                             },
                                             error: function(request, status, error) {
                                             }
@@ -205,7 +227,7 @@
                                             <div class="media pl-4 pt-3">
                                                 <a href=""><img src="../images/porfile.png" alt="" class="mr-3 rounded-circle" style="width:40px;"></a>
                                                 <div class="media-body" id="comment-body">
-                                                    <a href=""><h6><span id="post_name_<%=post[i]._id%>"><%=post[i].comments[j].name%></span></a> <small><i id="post_date_<%=post[i]._id%>"> <%=post[i].comments[j].date%></i></small></h6>
+                                                    <a href="/users?id=<%=id%>" class="hover"><h6><span id="post_name_<%=post[i]._id%>"><%=post[i].comments[j].name%></span></a> <small><i id="post_date_<%=post[i]._id%>"> <%=post[i].comments[j].date%></i></small></h6>
                                                     <p id="post_content_<%=post[i]._id%>" class="bg-white rounded-lg p-2"><%=post[i].comments[j].content%></p>
                                                 </div>
                                             </div>

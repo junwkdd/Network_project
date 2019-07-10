@@ -142,7 +142,6 @@ exports.addlike = function(post_id, id, callback) {
     console.log('addlike 호출됨');
 
     post_id = new ObjectId(post_id);
-    console.log('post_id: ' + post_id);
 
     var posts = db.collection("post");
     var post = posts.find({'_id': post_id});
@@ -156,17 +155,17 @@ exports.addlike = function(post_id, id, callback) {
                 } else {
                     console.log('좋아요 증가 성공');
                     posts.updateOne({"_id": post_id}, {$push: {'like_user': id}},
-                        function(err, result) {
+                        function(err, docs) {
                             if(err) {
                                 console.log('좋아요 유저 추가 실패');
                             } else {
                                 console.log('좋아요 유저 추가 성공');
+                                post.toArray(function(err, docs) {
+                                    callback(null, result, docs);
+                                });
                             }
                         }
                     );
-                    post.toArray(function(err, docs) {
-                        callback(null, result, docs);
-                    });
                 }
             }
         );
@@ -177,7 +176,6 @@ exports.sublike = function(post_id, id, callback) {
     console.log('sublike 호출됨');
 
     post_id = new ObjectId(post_id);
-    console.log('post_id: ' + post_id);
 
     var posts = db.collection("post");
     var post = posts.find({'_id': post_id});
@@ -191,18 +189,17 @@ exports.sublike = function(post_id, id, callback) {
                 } else {
                     console.log('좋아요 감소 성공');
                     posts.updateOne({"_id": post_id}, { $pull: { like_user: id }},
-                        function(err, result) {
+                        function(err, docs) {
                             if(err) {
                                 console.log('좋아요 유저 삭제 실패');
                             } else {
                                 console.log('좋아요 유저 삭제 성공');
+                                post.toArray(function(err, docs) {
+                                    callback(null, result, docs);
+                                });
                             }
                         }
                     );
-                    post.toArray(function(err, docs) {
-                        console.log(docs);
-                        callback(null, result, docs);
-                    });
                 }
             }
         );
@@ -261,6 +258,8 @@ exports.addinfo = function(id, student_id, profession, email, callback) {
 };
 
 exports.showusers = function(callback) {
+    console.log('showusers 호출됨');
+
     var users = db.collection("users");
     var user = users.find({});
 
@@ -276,8 +275,20 @@ exports.showusers = function(callback) {
 };
 
 exports.show_like_users = function(post_id, callback) {
-    var posts = db.collection('post');
-    var post = posts.find({"_id": post_id});
+    console.log('show_like_users 호출됨');
 
-    
+    post_id = new ObjectId(post_id);
+
+    var posts = db.collection("post");
+    var post = posts.find({});
+
+    post.toArray(function(err, docs) {
+        if(err) {
+            console.log('err: ' + err);
+            callback(err, null);
+        } else {
+            console.log('좋아요 유저 불러오기 성공');
+            callback(null, docs);
+        }
+    })
 };

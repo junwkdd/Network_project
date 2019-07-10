@@ -31,12 +31,12 @@ router.route('/')
 
   if(student_id && profession && email) {
     model.addinfo(id, student_id, profession, email, 
-      function(err, result) {
+      function(err, result, docs) {
         if(err) {
           res.render('error', {err: err});
         }
         if(result) {
-          console.log('result' + result);
+          res.send({user: docs});
         } else {
           res.render('error', {err: '회원가입 실패'});
         }

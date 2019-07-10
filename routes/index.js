@@ -81,7 +81,7 @@ router.route('/')
               console.log('err: ' + err);
               res.render('error', {err: '좋아요 삭제 실패'});
             } else if(result) {
-              console.log(docs);
+              console.log('docs[0]:' + docs[0]);
               res.send({result: docs[0].like});
             }
           }
@@ -89,6 +89,20 @@ router.route('/')
       }
     }
   }
+})
+.delete(function(req, res, next) {
+  var post_id = req.body.post_id;
+
+  model.show_like_users(post_id, 
+    function(err, result) {
+      if(err) {
+        console.log('err: ' + err);
+        res.render('error', {err: '좋아요 유저 삭제 실패'});
+      } else {
+        res.send({like_users: result});
+      }
+    }
+  )
 });
 
 module.exports = router;

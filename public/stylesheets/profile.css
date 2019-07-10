@@ -126,12 +126,11 @@ button:hover {
 * :focus {
     box-shadow: none!important;
 }
-
-a {
-    text-decoration: none!important;
-    color: #212529;
+.hover {
+  text-decoration: none!important;
+  color: #212529;
 }
-a:hover {
-    text-decoration: none!important;
-    color: #212529!important;
+.hover:hover {
+  text-decoration: none!important;
+  color: #212529!important;
 }

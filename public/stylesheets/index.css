@@ -22,7 +22,11 @@
     box-shadow: none!important;
 }
 
-a {
+.hover {
     text-decoration: none!important;
     color: #212529;
+}
+.hover:hover {
+    text-decoration: none!important;
+    color: #212529!important;
 }
