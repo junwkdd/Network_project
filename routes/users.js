@@ -7,19 +7,23 @@ router.route('/')
 .get(function(req, res, next) {
   console.log('프로필 get 호출됨');
   var id = req.query.id;
-
-  model.showprofile(id,
-    function(err, result_user, result_post) {
-      if(err) {
-        res.render('error', {err: err});
+  if(req.cookies.id) {
+    model.showprofile(id,
+      function(err, result_user, result_post) {
+        if(err) {
+          res.render('error', {err: err});
+        }
+        if(result_user && result_post) {
+          res.render('profile', {user: result_user[0], post: result_post, id: req.cookies.id});
+        } else {
+          res.render('error', {err: '프로필 불러오기 실패'});
+        }
       }
-      if(result_user && result_post) {
-        res.render('profile', {user: result_user[0], post: result_post, id: req.cookies.id});
-      } else {
-        res.render('error', {err: '프로필 불러오기 실패'});
-      }
-    }
-  );
+    );
+  } else {
+    console.log('로그인이 안되어있음');
+    res.redirect('/users/login');
+  }
 })
 .post(function(req, res, next) {
   console.log('프로필 post 호출됨');
