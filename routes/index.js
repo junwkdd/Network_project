@@ -8,12 +8,21 @@ router.route('/')
 .get(function(req, res, next) {
   console.log('index get 호출됨');
   model.showpost(req.cookies.id, 
-    function(err, result, name) {
+    function(err, result_post, name) {
       if(err) {
         console.log('err: ' + err);
         res.render('error', {err: '게시물 보유주기 실패'});
       } else {
-        res.render('index', {'post' : result, 'name': name, 'id': req.cookies.id});
+        model.showusers(
+          function(err, result_users) {
+            if(err) {
+              console.log('err: ' + err);            
+            } else {
+              console.dir('result_users: ' + result_users);
+              res.render('index', {'post' : result_post, 'users': result_users, 'name': name, 'id': req.cookies.id});
+            }
+          }
+        )
       }
     }
   );
@@ -92,6 +101,8 @@ router.route('/')
 })
 .delete(function(req, res, next) {
   var post_id = req.body.post_id;
+
+  console.log('post_id: ' + post_id);
 
   model.show_like_users(post_id, 
     function(err, result) {

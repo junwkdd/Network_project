@@ -280,7 +280,7 @@ exports.show_like_users = function(post_id, callback) {
     post_id = new ObjectId(post_id);
 
     var posts = db.collection("post");
-    var post = posts.find({});
+    var post = posts.find({'_id': post_id});
 
     post.toArray(function(err, docs) {
         if(err) {

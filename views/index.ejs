@@ -10,8 +10,10 @@
     <link rel="stylesheet" href="../stylesheets/index.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 </head>
 <body style="background-color: #F2F2F2">
@@ -45,8 +47,23 @@
     </nav>
     
     <div class="row" style="margin-top: 4rem!important">
-        <div class="col-sm-2">
-            lorem
+        <div class="col-sm-2 pl-4 pr-2">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">가입한 친구들</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <script>
+                </script>
+                    <% for(var i = 0; i < users.length; i++) { %>
+                        <tr>
+                            <td class="text-center"><%=users[i].name%></td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
         </div>
 
         <div class="col-sm-8">
@@ -96,18 +113,23 @@
                                     <% } %>
                                 </span>
                             </button>
+                            <script>
+                                
+                            </script>
                             <%# 좋아요 중복 확인 %>
                             <script>
-                                var post_id = '<%=post[i]._id%>';
                                 $.ajax({
                                     url: '/',
                                     type: 'delete',
                                     dataType:'json',
-                                    data: {post_id: post_id},
+                                    data: {post_id: '<%=post[i]._id%>'},
                                     success: function(data) {
                                         data = data.like_users[0];
                                         for(var i = 0; i < data.like_user.length; i++) {
                                             if('<%=id%>' == data.like_user[i]) {
+                                                console.log('post_id: ' + '<%=post[i]._id%>');
+                                                console.log('id: ' + '<%=id%>');
+                                                console.log('data.like_user[i]: ' + data.like_user[i]);
                                                 $('#heart_<%=post[i]._id%>').css('color', 'red');
                                                 break;
                                             } else {
@@ -213,7 +235,7 @@
                                                     var html = '<div class="media pl-4 pt-3">';
                                                         html += '<a href=""><img src="../images/porfile.png" alt="" class="mr-3 rounded-circle" style="width:40px;"></a>';
                                                         html += '<div class="media-body" id="comment-body">';
-                                                        html += '<a href=""><h6><span id="post_name_<%=post[i]._id%>">' + data[j].name + '</span></a> <small><i id="post_date_<%=post[i]._id%>">' + data[j].date + '</i></small></h6>';
+                                                        html += '<a href="/users?id=<%=id%>" class="hover"><h6><span id="post_name_<%=post[i]._id%>">' + data[j].name + '</span></a> <small><i id="post_date_<%=post[i]._id%>">' + data[j].date + '</i></small></h6>';
                                                         html += '<p id="post_content_<%=post[i]._id%>" class="bg-white rounded-lg p-2">' + data[j].content + '</p>';
                                                         html += '</div>'
                                                         html += '</div>' 
