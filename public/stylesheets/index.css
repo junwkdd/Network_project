@@ -33,3 +33,7 @@
 .tooltip-inner {
     white-space:pre-wrap;
 }
+
+html, body {
+    overflow-x:hidden;
+}
