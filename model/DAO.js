@@ -11,6 +11,7 @@ moment.tz.setDefault("Asia/Seoul");
 
 MongoClient.connect(url, {useNewUrlParser: true} , function(err, client) {
     console.log("Connected successfully to server");
+    console.log("db Name is " + dbName);
 
     db = client.db(dbName);
 });
